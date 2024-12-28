@@ -1,0 +1,28 @@
+﻿@model ProductViewModel
+@{
+    ViewData["Title"] = "Product Details";
+}
+<div class="p-4 container">
+    <div class="row p-4">
+        <div class="col-md-12">
+            <h3>Add new Product</h3>
+        </div>
+    </div>
+    <div class="row p-4">
+        <div class="col-md-6">
+            <form asp-controller="Product" asp-action="Add" method="post">
+                <div class="mb-3">
+                    <label for="ProductName" class="form-label fw-bold">Product Name</label>
+                    <input asp-for="ProductName" type="text" class=" form-control">
+                    <span asp-validation-for="ProductName"></span>
+                </div> 
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Choose Category</label>
+                    <select asp-for="CategoryId" asp-items="ViewBag.Category"></select>
+                </div>
+               <button type="submit" class="btn btn-dark">Submit</button>
+
+            </form>
+        </div>
+   </div>
+</div>

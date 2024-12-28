@@ -1,0 +1,23 @@
+﻿@model CategoryViewModel
+@{
+    ViewData["Title"] = "Category Details";
+}
+<div class="p-4 container">
+    <div class="row p-4">
+        <div class="col-md-12">
+            <h3>Add new Category</h3>
+        </div>
+    </div>
+    <div class="row p-4">
+        <div class="col-md-6">
+            <form asp-controller="Category" asp-action="Add" method="post">
+                <div class="mb-3">
+                    <label for="CategoryName" class="form-label fw-bold">Category Name</label>
+                    <input asp-for="CategoryName" type="text" class=" form-control">
+                    <span asp-validation-for="CategoryName"></span>
+                </div> 
+               <button type="submit" class="btn btn-dark">Submit</button>
+            </form>
+        </div>
+   </div>
+</div>
