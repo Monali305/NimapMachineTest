@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nimap_Machine_Test.Models;
 using Nimap_Machine_Test.Repositories;
@@ -65,8 +65,17 @@ namespace Nimap_Machine_Test.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            await _productRepository.DeleteAsync(id);
-            return RedirectToAction("Index", "Product");
+            try
+            {
+                await _productRepository.DeleteAsync(id);
+                return RedirectToAction("Index", "Product");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Error deleting product: {ex.Message}");
+                return RedirectToAction("Index", "Product");
+            }
+
         }
     }
 }
