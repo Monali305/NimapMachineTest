@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Nimap_Machine_Test.Repositories;
 using Nimap_Machine_Test.ViewModels;
 
@@ -44,10 +44,11 @@ namespace Nimap_Machine_Test.Controllers
         {
             if (!ModelState.IsValid)
             {
-                await _categoryRepository.UpdateAsync(category);
-                return RedirectToAction("Index","Category");
+                return View(category);
             }
-            return View(category);
+            await _categoryRepository.UpdateAsync(category);
+            return RedirectToAction("Index", "Category");
+            
         }
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
