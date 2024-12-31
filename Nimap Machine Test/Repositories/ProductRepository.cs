@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Nimap_Machine_Test.Data;
 using Nimap_Machine_Test.Models;
 using Nimap_Machine_Test.ViewModels;
@@ -23,7 +23,6 @@ namespace Nimap_Machine_Test.Repositories
             {
                 ProductName = product.ProductName,
                 CategoryId = product.CategoryId,
-                CategoryName = category.CategoryName
             };
             await _dbContext.Products.AddAsync(newProduct);
             await _dbContext.SaveChangesAsync();
@@ -31,7 +30,7 @@ namespace Nimap_Machine_Test.Repositories
 
         public async Task DeleteAsync(int Id)
         {
-            var product = await _dbContext.Products.FindAsync(Id);
+            var product = await _dbContext.Products.FirstOrDefaultAsync(p => p.ProductId == Id);
             if (product == null)
             {
                 throw new ArgumentException($"Product with ID {Id} not found.");
@@ -43,12 +42,13 @@ namespace Nimap_Machine_Test.Repositories
         public IQueryable<ProductViewModel> GetAllAsync()
         {
             var products = _dbContext.Products
+            .Include(p => p.Category)
             .Select(e => new ProductViewModel
             {
                 ProductId = e.ProductId,
                 ProductName = e.ProductName,
                 CategoryId = e.CategoryId,
-                CategoryName = e.CategoryName
+                CategoryName = e.Category.CategoryName
             });
             
             return products;
@@ -56,7 +56,9 @@ namespace Nimap_Machine_Test.Repositories
 
         public async Task<ProductViewModel> GetByIdAsync(int id)
         {
-            var product = await _dbContext.Products.FindAsync(id);
+            var product = await _dbContext.Products
+                                    .Include(p => p.Category)
+                                    .FirstOrDefaultAsync(p => p.ProductId == id);
             if (product == null)
             {
                 throw new ArgumentException($"Product with ID {id} not found.");
@@ -66,7 +68,7 @@ namespace Nimap_Machine_Test.Repositories
                 ProductId = product.ProductId,
                 ProductName = product.ProductName,
                 CategoryId = product.CategoryId,
-                CategoryName = product.CategoryName
+                CategoryName = product.Category.CategoryName
             };
             return productviewmodel;
         }
@@ -85,7 +87,7 @@ namespace Nimap_Machine_Test.Repositories
             }
             product.ProductName = productupdated.ProductName;
             product.CategoryId = productupdated.CategoryId;
-            product.CategoryName = category.CategoryName;
+            
             _dbContext.Products.Update(product);
             await _dbContext.SaveChangesAsync();
         }
